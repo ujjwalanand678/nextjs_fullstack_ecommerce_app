@@ -20,3 +20,12 @@ const customerSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 export default mongoose.models.Customer || mongoose.model("Customer", customerSchema)
+
+/*
+Customer profile = shopping behavior layer.
+
+A user becomes a customer only when interacting with marketplace features.
+Separating this prevents the core identity record from constantly mutating.
+
+Addresses live here because they belong to the buying context.
+*/

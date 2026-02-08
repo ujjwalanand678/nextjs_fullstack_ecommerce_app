@@ -29,3 +29,15 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 export default mongoose.models.User || mongoose.model("User", userSchema)
+
+/*
+User = identity layer of the system.
+
+Represents a human account only.
+Contains authentication + universal properties.
+
+Does NOT store shopping behavior or seller data.
+Those live in separate profiles because a person can gain/lose roles over time.
+
+User should remain stable across the lifetime of the platform.
+*/

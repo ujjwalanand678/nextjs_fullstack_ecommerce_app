@@ -172,3 +172,8 @@ src/
 └── config/                                # App configuration
     ├── env.js                            # Environment validation
     └── app.config.js                     # Global settings
+
+
+# NOTE:
+Model = collection (a real table in MongoDB)
+Schema = shape (a reusable structure inside documents)
