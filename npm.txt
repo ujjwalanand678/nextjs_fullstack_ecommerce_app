@@ -1,0 +1,4 @@
+npm install bcryptjs jsonwebtoken
+npm install mongoose
+npm install mongoose
+npm install dotenv
