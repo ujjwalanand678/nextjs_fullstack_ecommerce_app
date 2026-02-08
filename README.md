@@ -1,126 +1,174 @@
+# Folder Structure
+
 src/
 │
-├── app/                         # Next.js App Router (UI + API entrypoints)
+├── app/                                   # Next.js App Router — UI + HTTP entrypoints
 │   │
-│   ├── (auth)/                  # Shared authentication pages (all roles)
-│   │   ├── login/page.jsx       # User login
-│   │   ├── register/page.jsx    # Create account (customer or seller)
-│   │   ├── forgot-password/page.jsx
-│   │   └── layout.jsx           # Auth specific layout (no main navbar)
+│   ├── (public)/                          # 🌍 Guest browsing (no login required)
+│   │   ├── page.jsx                       # Landing / featured products
+│   │   ├── products/page.jsx              # Product listing
+│   │   ├── products/[slug]/page.jsx       # Product details
+│   │   ├── search/page.jsx                # Search results
+│   │   ├── categories/page.jsx            # Category browsing
+│   │   └── layout.jsx                     # Public storefront layout (navbar/footer)
 │   │
-│   ├── (public)/                # Public marketing pages (no login required)
-│   │   ├── page.jsx             # Landing page
-│   │   ├── about/page.jsx
-│   │   └── contact/page.jsx
+│   ├── (soft-auth)/                       # 🟡 Optional login (works without account)
+│   │   ├── cart/page.jsx                  # Guest cart (merged after login)
+│   │   ├── wishlist/page.jsx              # Local wishlist for guests
+│   │   └── layout.jsx                     # Same UI but user-aware
 │   │
-│   ├── (customer)/              # Customer storefront (buyers)
-│   │   ├── layout.jsx           # Shop layout/navbar
-│   │   ├── page.jsx             # Homepage product feed
-│   │   ├── products/
-│   │   │   ├── page.jsx         # Product listing
-│   │   │   └── [slug]/page.jsx  # Product detail page
-│   │   ├── cart/page.jsx        # Shopping cart
-│   │   ├── checkout/page.jsx    # Order placement
-│   │   ├── orders/page.jsx      # Order history
-│   │   ├── wishlist/page.jsx
-│   │   └── account/             # User profile settings
-│   │       ├── page.jsx
-│   │       ├── addresses/page.jsx
-│   │       └── settings/page.jsx
+│   ├── (customer)/                        # 🔵 Customer authenticated area
+│   │   ├── checkout/page.jsx              # Payment requires login
+│   │   ├── orders/page.jsx                # Order history
+│   │   ├── account/page.jsx               # Profile overview
+│   │   ├── account/addresses/page.jsx     # Shipping addresses
+│   │   ├── account/settings/page.jsx      # Account settings
+│   │   └── layout.jsx                     # Customer dashboard layout
 │   │
-│   ├── seller/                  # Seller dashboard (inventory owners)
-│   │   ├── layout.jsx
-│   │   ├── page.jsx             # Seller analytics overview
-│   │   ├── products/
-│   │   │   ├── page.jsx         # Seller product list
-│   │   │   ├── new/page.jsx     # Add product
-│   │   │   └── edit/[id]/page.jsx
-│   │   ├── orders/page.jsx      # Orders received
-│   │   ├── analytics/page.jsx
-│   │   ├── payouts/page.jsx
-│   │   └── settings/page.jsx
+│   ├── seller/                            # 🟠 Seller restricted dashboard
+│   │   ├── page.jsx                       # Seller overview
+│   │   ├── products/page.jsx              # Inventory list
+│   │   ├── products/new/page.jsx          # Create product
+│   │   ├── products/edit/[id]/page.jsx    # Edit owned product
+│   │   ├── orders/page.jsx                # Incoming orders
+│   │   ├── analytics/page.jsx             # Sales analytics
+│   │   └── layout.jsx                     # Seller control panel UI
 │   │
-│   ├── admin/                   # Platform administration panel
-│   │   ├── layout.jsx
-│   │   ├── page.jsx             # System overview metrics
-│   │   ├── users/page.jsx       # Manage customers
-│   │   ├── sellers/page.jsx     # Manage sellers
-│   │   ├── products/page.jsx    # Moderation
-│   │   ├── orders/page.jsx
-│   │   ├── disputes/page.jsx
-│   │   └── reports/page.jsx
+│   ├── admin/                             # 🔴 Platform admin console
+│   │   ├── page.jsx                       # System overview
+│   │   ├── users/page.jsx                 # Manage customers
+│   │   ├── sellers/page.jsx               # Manage sellers
+│   │   ├── products/page.jsx              # Moderation tools
+│   │   ├── disputes/page.jsx              # Resolve conflicts
+│   │   └── layout.jsx                     # Admin interface layout
 │   │
-│   ├── api/                     # Backend HTTP entrypoints (thin layer)
-│   │   ├── auth/route.js        # login/register/session
-│   │   ├── products/route.js
-│   │   ├── cart/route.js
-│   │   ├── orders/route.js
-│   │   ├── payments/route.js
-│   │   ├── seller/route.js      # seller-only actions
-│   │   └── admin/route.js       # admin-only actions
+│   ├── (auth)/                            # Authentication pages
+│   │   ├── login/page.jsx                 # Sign in
+│   │   ├── register/page.jsx              # Account creation
+│   │   └── forgot-password/page.jsx       # Password recovery
 │   │
-│   ├── layout.jsx               # Root layout
-│   ├── globals.css
-│   └── page.jsx
+│   ├── api/                               # Thin HTTP handlers (no business logic)
+│   │   ├── public/route.js                # Fetch products/search
+│   │   ├── customer/route.js              # Checkout & orders
+│   │   ├── seller/route.js                # Inventory management
+│   │   └── admin/route.js                 # Moderation actions
+│   │
+│   ├── layout.jsx                         # Root layout (providers, theme)
+│   ├── globals.css                        # Global styles
+│   └── page.jsx                           # Redirect → /products
 │
-├── controllers/                 # Handles HTTP requests (req → service → res)
-│   ├── auth.controller.js
-│   ├── product.controller.js
-│   ├── cart.controller.js
-│   ├── order.controller.js
-│   ├── payment.controller.js
-│   ├── seller.controller.js     # Seller operations
-│   └── admin.controller.js      # Admin moderation actions
+├── controllers/                           # Request parsing & response formatting
+│   ├── auth.controller.js                # Login/logout endpoints
+│   ├── product.controller.js             # Product operations
+│   ├── cart.controller.js                # Cart operations
+│   ├── order.controller.js               # Order endpoints
+│   ├── payment.controller.js             # Payment endpoints
+│   ├── seller.controller.js              # Seller actions
+│   └── admin.controller.js               # Admin actions
 │
-├── services/                    # Core business rules (framework-independent)
+├── services/                              # Business rules (core system logic)
 │   ├── auth.service.js
 │   ├── product.service.js
 │   ├── cart.service.js
 │   ├── order.service.js
 │   ├── payment.service.js
-│   ├── seller.service.js        # Ownership & inventory rules
-│   └── admin.service.js         # Platform governance rules
+│   ├── seller.service.js
+│   └── admin.service.js
 │
-├── models/                      # Database schemas (Mongo/Mongoose)
-│   ├── user.model.js            # roles: customer | seller | admin
-│   ├── product.model.js         # linked to seller
+├── repositories/                          # Database query layer
+│   ├── user.repository.js                # User queries
+│   ├── product.repository.js             # Product queries
+│   ├── cart.repository.js                # Cart queries
+│   └── order.repository.js               # Order queries
+│
+├── models/                                # Database schemas (Mongoose/ORM)
+│   ├── user.model.js
+│   ├── product.model.js
 │   ├── cart.model.js
 │   ├── order.model.js
 │   ├── review.model.js
 │   └── payout.model.js
 │
-├── permissions/                 # Role Based Access Control (RBAC)
-│   ├── roles.js                 # role definitions
-│   ├── canAccess.js             # permission checker
-│   └── policies.js              # rules mapping role → action
+├── permissions/                           # Role-based access control engine
+│   ├── accessLevels.js                   # PUBLIC / CUSTOMER / SELLER / ADMIN
+│   ├── withRole.js                       # Role validator
+│   └── routeProtection.js                # Route → permission mapping
 │
-├── lib/                         # External integrations & infrastructure
-│   ├── db.js                    # database connection
-│   ├── auth.js                  # JWT/session utilities
-│   ├── stripe.js                # payment provider setup
-│   └── cloudinary.js            # image upload service
+├── lib/                                   # External services adapters
+│   ├── db.js                             # Database connection
+│   ├── auth.js                           # JWT/session helpers
+│   ├── stripe.js                         # Payment provider
+│   ├── cloudinary.js                     # File uploads
+│   └── redis.js                          # Caching/session storage
 │
-├── components/                  # Reusable UI components
-│   ├── ui/                      # generic components (buttons, inputs)
-│   ├── layout/                  # navbar, footer, wrappers
-│   ├── customer/                # storefront components
-│   ├── seller/                  # dashboard components
-│   └── admin/                   # moderation components
+├── events/                                # Domain events (decoupled reactions)
+│   ├── orderCreated.event.js
+│   ├── paymentSuccess.event.js
+│   └── userRegistered.event.js
 │
-├── hooks/                       # Reusable frontend behavior
+├── jobs/                                  # Background async tasks
+│   ├── email.job.js
+│   ├── paymentWebhook.job.js
+│   ├── orderTimeout.job.js
+│   └── cleanup.job.js
+│
+├── mail/                                  # Email templates
+│   ├── orderConfirmation.template.jsx
+│   ├── resetPassword.template.jsx
+│   └── sellerApproval.template.jsx
+│
+├── errors/                                # Central error handling system
+│   ├── AppError.js                       # Custom error class
+│   ├── errorCodes.js                     # Standard error codes
+│   └── errorHandler.js                   # API error formatter
+│
+├── logger/                                # Logging & monitoring
+│   ├── logger.js                         # Logger configuration
+│   └── requestLogger.js                  # Logs incoming requests
+│
+├── constants/                             # Shared enums/constants
+│   ├── roles.js
+│   ├── orderStatus.js
+│   └── paymentStatus.js
+│
+├── validations/                           # Input validation schemas
+│   ├── auth.schema.js
+│   ├── product.schema.js
+│   ├── order.schema.js
+│   └── cart.schema.js
+│
+├── uploads/                               # Temporary file processing
+│   └── uploadHandler.js
+│
+├── utils/                                 # Pure helper utilities
+│   ├── formatPrice.js
+│   ├── generateSlug.js
+│   └── pagination.js
+│
+├── hooks/                                 # Reusable frontend logic
 │   ├── useAuth.js
 │   ├── useRole.js
 │   └── usePermission.js
 │
-├── store/                       # Global state (Zustand/Redux)
+├── store/                                 # Global client state
 │   ├── auth.store.js
 │   ├── cart.store.js
 │   └── dashboard.store.js
 │
-├── validations/                 # Request validation schemas
+├── components/                            # Reusable UI components
+│   ├── ui/                               # Buttons, inputs, modals
+│   ├── layout/                           # Navbar, footer
+│   ├── customer/                         # Storefront components
+│   ├── seller/                           # Seller UI components
+│   └── admin/                            # Admin UI components
 │
-├── utils/                       # Pure helper functions
+├── tests/                                 # Automated testing
+│   ├── unit/                             # Function tests
+│   ├── integration/                      # DB/API tests
+│   └── e2e/                              # User flow tests
 │
-├── middleware.js                # Protect routes based on role/session
+├── middleware.js                          # Security gate (auth + role check)
 │
-└── config/                      # Environment & app configuration
+└── config/                                # App configuration
+    ├── env.js                            # Environment validation
+    └── app.config.js                     # Global settings
